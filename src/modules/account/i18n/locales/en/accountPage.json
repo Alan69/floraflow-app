@@ -1,0 +1,39 @@
+{
+  "profile": "Profile",
+  "storeProfile": "Store Profile",
+  "support": "Support",
+  "form": {
+    "email_label": "Email",
+    "first_name_label": "First Name",
+    "last_name_label": "Last Name",
+    "phone_number_label": "Phone Number",
+    "city_label": "City",
+    "profile_picture_label": "Profile Picture",
+    "store_mode_label": "Store Mode",
+    "store_name_label": "Store Name",
+    "store_address_label": "Store Address",
+    "store_whatsapp_label": "Store WhatsApp",
+    "store_instagram_label": "Store Instagram",
+    "store_twogis_label": "2GIS Link",
+    "store_logo_label": "Store Logo",
+    "average_rating_label": "Average Rating",
+    "first_name_required": "First name is required",
+    "last_name_required": "Last name is required",
+    "phone_required": "Phone number is required",
+    "city_required": "City is required",
+    "profile_picture_required": "Profile picture is required",
+    "change_picture": "Change profile picture",
+    "change_store_logo": "Change store logo"
+  },
+  "buttons": {
+    "save": "Save"
+  },
+  "messages": {
+    "success": "Your profile has been successfully updated!",
+    "error": "An error occurred! Your profile has not been updated!",
+    "profile_updated": "Profile updated successfully!",
+    "profile_picture_updated": "Profile picture updated!",
+    "user_type_updated": "User type updated successfully!",
+    "user_type_update_failed": "Failed to update user type!"
+  }
+}

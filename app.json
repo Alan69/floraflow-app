@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Flora Flow",
+    "slug": "floraflow",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/main-icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/main-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.floraflow"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/main-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.floraflow"
+    },
+    "web": {
+      "favicon": "./assets/main-icon.png"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "languageSelector": {
+    "selectLanguage": "Select Language",
+    "close": "Close",
+    "languages": {
+      "en": "English",
+      "ru": "Russian"
+    }
+  }
+}

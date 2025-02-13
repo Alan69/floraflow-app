@@ -1,0 +1,39 @@
+{
+  "profile": "Профиль",
+  "storeProfile": "Профиль магазина",
+  "support": "Номер службы поддержки",
+  "form": {
+    "email_label": "Email",
+    "first_name_label": "Имя",
+    "last_name_label": "Фамилия",
+    "phone_number_label": "Номер телефона",
+    "city_label": "Город",
+    "profile_picture_label": "Фото профиля",
+    "store_mode_label": "Режим магазина",
+    "store_name_label": "Название магазина",
+    "store_address_label": "Адрес магазина",
+    "store_whatsapp_label": "Номер WhatsApp",
+    "store_instagram_label": "Instagram",
+    "store_twogis_label": "Ссылка 2GIS",
+    "store_logo_label": "Логотип магазина",
+    "average_rating_label": "Средний рейтинг",
+    "first_name_required": "Имя обязательно",
+    "last_name_required": "Фамилия обязательна",
+    "phone_required": "Номер телефона обязателен",
+    "city_required": "Город обязателен",
+    "profile_picture_required": "Фото профиля обязательно",
+    "change_picture": "Изменить фото профиля",
+    "change_store_logo": "Изменить логотип магазина"
+  },
+  "buttons": {
+    "save": "Сохранить"
+  },
+  "messages": {
+    "success": "Ваш профиль был успешно изменен!",
+    "error": "Произошла ошибка! Ваш профиль не был изменен!",
+    "profile_updated": "Профиль обновлен успешно!",
+    "profile_picture_updated": "Фото профиля обновлено!",
+    "user_type_updated": "Тип пользователя успешно обновлен!",
+    "user_type_update_failed": "Ошибка при обновлении типа пользователя!"
+  }
+}
