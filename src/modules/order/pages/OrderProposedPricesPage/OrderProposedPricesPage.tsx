@@ -198,8 +198,6 @@ export const OrderProposedPricesPage = () => {
     }
   };
 
-  console.log("orderData", orderData);
-
   const handleRateOrder = async () => {
     if (!orderData?.uuid) return;
     setIsRatingModalVisible(false);

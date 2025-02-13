@@ -34,6 +34,9 @@
     "profile_updated": "Profile updated successfully!",
     "profile_picture_updated": "Profile picture updated!",
     "user_type_updated": "User type updated successfully!",
-    "user_type_update_failed": "Failed to update user type!"
+    "user_type_update_failed": "Failed to update user type!",
+    "profile_update_failed": "Failed to update profile!",
+    "permission_denied": "Permission to access media library was denied",
+    "picture_pick_failed": "Failed to pick image"
   }
 }

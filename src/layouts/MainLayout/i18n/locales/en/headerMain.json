@@ -1,5 +1,6 @@
 {
   "logout": "Logout",
   "language_english": "English",
-  "language_russian": "Russian"
+  "language_russian": "Russian",
+  "logoutSuccess": "You have successfully logged out"
 }

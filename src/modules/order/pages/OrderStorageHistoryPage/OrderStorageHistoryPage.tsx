@@ -95,6 +95,15 @@ export const OrderStorageHistoryPage = () => {
     }
   };
 
+  const handleWhatsAppPress = (phone?: string) => {
+    if (phone) {
+      const formattedPhone = phone.startsWith("8")
+        ? "+7" + phone.slice(1)
+        : phone;
+      Linking.openURL(`whatsapp://send?phone=${formattedPhone}`);
+    }
+  };
+
   const renderOrder = ({ item }: { item: TOrderStorageHistory }) => {
     const getStatusStyle = (status: OrderStatusEnum) => {
       switch (status) {
@@ -150,9 +159,12 @@ export const OrderStorageHistoryPage = () => {
             Оформление: {item.decoration ? "Да" : "Нет"}
           </Text>
           <Text variant="bodyMedium">Адрес: {item.recipients_address}</Text>
-          <Text variant="bodyMedium">
-            Номер получателя: {item.recipients_phone}
-          </Text>
+          {item.status !== OrderStatusEnum.pending &&
+            item.status !== OrderStatusEnum.canceled && (
+              <Text variant="bodyMedium">
+                Номер получателя: {item.recipients_phone}
+              </Text>
+            )}
           <Text variant="bodyMedium">Комментарий: {item.flower_data}</Text>
 
           <View style={styles.divider} />
@@ -179,15 +191,13 @@ export const OrderStorageHistoryPage = () => {
                     icon="phone"
                     size={36}
                     onPress={() =>
-                      Linking.openURL(`tel:${item.recipients_phone}`)
+                      Linking.openURL(`tel:${item.customer_phone}`)
                     }
                   />
                   <IconButton
                     icon="whatsapp"
                     size={36}
-                    onPress={() =>
-                      Linking.openURL(`https://wa.me/${item.recipients_phone}`)
-                    }
+                    onPress={() => handleWhatsAppPress(item.customer_phone)}
                   />
                 </View>
               </>

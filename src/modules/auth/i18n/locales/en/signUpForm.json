@@ -21,5 +21,8 @@
   "login_link": "Already have an account?",
   "first_name_label": "First Name",
   "last_name_label": "Last Name",
-  "city_label": "City"
+  "city_label": "City",
+  "city_required": "City is required",
+  "error_title": "Registration Error",
+  "password_invalid_title": "Invalid Password"
 }

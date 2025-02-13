@@ -6,5 +6,9 @@
   "login_error": "Вход не удался. Пожалуйста, проверьте свои учетные данные.",
   "registration_link": "Регистрация аккаунта",
   "forgot_password_link": "Забыли пароль?",
-  "login_success": "Авторизация прошла успешно!"
+  "login_success": "Авторизация прошла успешно!",
+  "email_required": "Email обязателен",
+  "email_invalid": "Пожалуйста, введите корректный email адрес",
+  "password_required": "Пароль обязателен",
+  "generic_error": "Произошла ошибка при входе"
 }

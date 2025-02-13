@@ -8,21 +8,22 @@ import {
   Platform,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "types/RootStackParamList";
 import { useDispatch } from "react-redux";
 import { authActions } from "modules/auth/redux/slices/auth.slice";
 import { LanguageSelector } from "components/LanguageSelector/LanguageSelector";
+import Toast from "react-native-toast-message";
 import logo from "assets/images/logo.png";
 
 export const Header = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
   const logOut = () => {
     dispatch(authActions.logout());
+    Toast.show({
+      type: "success",
+      text1: t("headerMain.logoutSuccess"),
+    });
   };
 
   return (

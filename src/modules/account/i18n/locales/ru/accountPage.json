@@ -34,6 +34,9 @@
     "profile_updated": "Профиль обновлен успешно!",
     "profile_picture_updated": "Фото профиля обновлено!",
     "user_type_updated": "Тип пользователя успешно обновлен!",
-    "user_type_update_failed": "Ошибка при обновлении типа пользователя!"
+    "user_type_update_failed": "Ошибка при обновлении типа пользователя!",
+    "profile_update_failed": "Ошибка при обновлении профиля!",
+    "permission_denied": "Доступ к медиатеке запрещен",
+    "picture_pick_failed": "Ошибка при выборе изображения"
   }
 }

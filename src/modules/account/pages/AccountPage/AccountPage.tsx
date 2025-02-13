@@ -6,6 +6,8 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  Linking,
+  TouchableOpacity,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "hooks/useTypedSelector";
@@ -29,6 +31,7 @@ import avatar from "assets/images/avatar.png";
 import { CityEnum, UserTypeEnum } from "modules/account/types";
 import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const AccountPage = () => {
   const { t } = useTranslation();
@@ -315,9 +318,14 @@ export const AccountPage = () => {
         showsVerticalScrollIndicator={true}
       >
         <View style={styles.supportContainer}>
-          <Text style={styles.supportText}>
-            {t("accountPage.support")}:{"\n"}+7-705-828-84-37
-          </Text>
+          <Text style={styles.supportText}>{t("accountPage.support")}:</Text>
+          <TouchableOpacity
+            style={styles.phoneContainer}
+            onPress={() => Linking.openURL("whatsapp://send?phone=77058288437")}
+          >
+            <MaterialCommunityIcons name="whatsapp" size={36} color="#0b9a39" />
+            <Text style={styles.phoneText}>+7-705-828-84-37</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.title}>{t("accountPage.profile")}</Text>
@@ -677,10 +685,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
     textAlign: "center",
-    lineHeight: 20,
+    marginBottom: 5,
   },
   storeLogoContainer: {
     alignItems: "center",
     marginBottom: 20,
+  },
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  phoneText: {
+    fontSize: 14,
+    color: "#333",
   },
 });

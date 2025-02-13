@@ -21,5 +21,8 @@
   "login_link": "Есть аккаунт?",
   "first_name_label": "Имя",
   "last_name_label": "Фамилия",
-  "city_label": "Город"
+  "city_label": "Город",
+  "city_required": "Город обязателен",
+  "error_title": "Ошибка регистрации",
+  "password_invalid_title": "Некорректный пароль"
 }

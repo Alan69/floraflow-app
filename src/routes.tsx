@@ -3,7 +3,7 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from "@react-navigation/stack";
-import { useNavigation, useNavigationState } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useTypedSelector } from "./hooks/useTypedSelector";
 import { LoginPage } from "modules/auth/pages/LoginPage";
 import { SignUpPage } from "modules/auth/pages/SignUpPage";
@@ -24,9 +24,6 @@ const AppRoutes: React.FC = () => {
   const { token, user } = useTypedSelector((state) => state.auth);
   const [getMe] = useLazyGetMeQuery();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const currentRoute = useNavigationState(
-    (state) => state?.routes?.[state.index]?.name ?? null
-  );
 
   useEffect(() => {
     const initializeUser = async () => {
