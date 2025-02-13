@@ -18,6 +18,9 @@ import {
   useAcceptOrderMutation,
   useCancelOrderMutation,
   useLazyGetProposedPricesQuery,
+  useRateOrderMutation,
+  useChangeOrderStatusMutation,
+  useChangeOrderStatusClientMutation,
 } from "modules/order/redux/api";
 import {
   OrderStatusEnum,
@@ -26,7 +29,7 @@ import {
   TProposedPrice,
 } from "modules/order/types";
 import { useLazyGetMeQuery } from "modules/account/redux/api";
-import { Card, IconButton, Text } from "react-native-paper";
+import { Card, Divider, IconButton, Text } from "react-native-paper";
 
 export const OrderProposedPricesPage = () => {
   const [orderData, setOrderData] = useState<TCurrentOrderResponse | null>(
@@ -35,6 +38,10 @@ export const OrderProposedPricesPage = () => {
   const [proposedPrices, setProposedPrices] = useState<TProposedPrice[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const [isRatingModalVisible, setIsRatingModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
+    useState(false);
+  const [rating, setRating] = useState(4);
 
   const [getMe, { isLoading: isCurrentOrderLoading }] = useLazyGetMeQuery();
 
@@ -44,7 +51,8 @@ export const OrderProposedPricesPage = () => {
     useCancelCurrentOrderMutation();
   const [acceptOrder] = useAcceptOrderMutation();
   const [cancelOrder] = useCancelOrderMutation();
-
+  const [rateOrder] = useRateOrderMutation();
+  const [changeOrderStatusClient] = useChangeOrderStatusClientMutation();
   const fetchOrderData = async () => {
     try {
       const data = await getMe().unwrap();
@@ -188,6 +196,14 @@ export const OrderProposedPricesPage = () => {
     if (twogisLink) {
       Linking.openURL(twogisLink);
     }
+  };
+
+  console.log("orderData", orderData);
+
+  const handleRateOrder = async () => {
+    if (!orderData?.uuid) return;
+    setIsRatingModalVisible(false);
+    setIsConfirmationModalVisible(true);
   };
 
   const statusStyles = {
@@ -380,11 +396,25 @@ export const OrderProposedPricesPage = () => {
                 Комментарий: {orderData.flower_data}
               </Text>
 
-              {/* {orderData.status === OrderStatusEnum.completed && ( */}
+              <Divider style={styles.divider} />
+
               <>
-                <Text variant="titleSmall" style={styles.sectionHeader}>
-                  Магазин: {orderData?.prices[0].store_name}
-                </Text>
+                <View style={styles.cardHeader}>
+                  <View style={styles.storeInfo}>
+                    {orderData?.prices[0].logo && (
+                      <Image
+                        source={{ uri: orderData?.prices[0].logo }}
+                        style={styles.storeLogo}
+                      />
+                    )}
+                    <Text style={styles.storeName}>
+                      Магазин: {orderData?.prices[0].store_name}
+                    </Text>
+                  </View>
+                  <Text style={styles.rating}>
+                    ⭐ {orderData?.prices[0].rating}
+                  </Text>
+                </View>
                 <Text variant="bodyMedium">
                   Цена с доставкой:{" "}
                   <Text style={styles.priceText}>
@@ -394,6 +424,9 @@ export const OrderProposedPricesPage = () => {
                 <Text variant="bodyMedium">
                   Комментарий: {orderData?.prices[0].comment}
                 </Text>
+
+                <Divider style={styles.divider} />
+
                 <View style={styles.iconsContainer}>
                   {orderData?.prices[0]?.instagram_link && (
                     <IconButton
@@ -439,7 +472,15 @@ export const OrderProposedPricesPage = () => {
                   )}
                 </View>
               </>
-              {/* )} */}
+
+              {orderData.status === OrderStatusEnum.in_transit && (
+                <TouchableOpacity
+                  style={[styles.deliveredButton, { marginTop: 16 }]}
+                  onPress={() => setIsRatingModalVisible(true)}
+                >
+                  <Text style={styles.buttonText}>Доставлен</Text>
+                </TouchableOpacity>
+              )}
 
               <TouchableOpacity
                 style={styles.cancelButton}
@@ -461,7 +502,9 @@ export const OrderProposedPricesPage = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Отказ</Text>
+                <View style={styles.modalContainerRed}>
+                  <Text style={styles.modalTitle}>Отказ</Text>
+                </View>
                 <TextInput
                   style={styles.textArea}
                   placeholder="Причина отказа"
@@ -489,6 +532,123 @@ export const OrderProposedPricesPage = () => {
                       { backgroundColor: "#E9833A" },
                     ]}
                     onPress={() => setIsModalVisible(false)}
+                  >
+                    <Text style={styles.confirmButtonText}>Нет</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={isRatingModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsRatingModalVisible(false)}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => setIsRatingModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <View style={styles.modalContainerGreen}>
+                  <Text style={styles.modalTitle}>Заказ выполнен</Text>
+                </View>
+                <Text style={styles.modalSubtitle}>
+                  Магазин: {orderData?.prices[0]?.store_name}
+                </Text>
+                <View style={styles.starsContainer}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <TouchableOpacity
+                      key={star}
+                      onPress={() => setRating(star)}
+                    >
+                      <Text
+                        style={[
+                          styles.star,
+                          star <= rating && styles.starSelected,
+                        ]}
+                      >
+                        ★
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[
+                      styles.confirmButton,
+                      { backgroundColor: "#0B9A39" },
+                    ]}
+                    onPress={handleRateOrder}
+                  >
+                    <Text style={styles.confirmButtonText}>Ok</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={isConfirmationModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsConfirmationModalVisible(false)}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => setIsConfirmationModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Внимание</Text>
+                <Text style={styles.modalText}>Вы уверены?</Text>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[
+                      styles.confirmButton,
+                      { backgroundColor: "#0B9A39" },
+                    ]}
+                    onPress={async () => {
+                      try {
+                        await rateOrder({
+                          uuid: orderData.uuid,
+                          rating: rating,
+                        }).unwrap();
+
+                        await changeOrderStatusClient({
+                          order_id: orderData.uuid,
+                          status: OrderStatusEnum.completed,
+                        }).unwrap();
+
+                        setIsConfirmationModalVisible(false);
+                        fetchOrderData();
+
+                        Toast.show({
+                          type: "success",
+                          text1: "Успех",
+                          text2: "Заказ успешно завершен",
+                        });
+                      } catch (error) {
+                        Toast.show({
+                          type: "error",
+                          text1: "Ошибка",
+                          text2: "Не удалось оценить заказ",
+                        });
+                      }
+                    }}
+                  >
+                    <Text style={styles.confirmButtonText}>Да</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.confirmButton,
+                      { backgroundColor: "#E9833A" },
+                    ]}
+                    onPress={() => setIsConfirmationModalVisible(false)}
                   >
                     <Text style={styles.confirmButtonText}>Нет</Text>
                   </TouchableOpacity>
@@ -561,7 +721,6 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 16,
   },
   priceText: {
     color: "#333",
@@ -599,7 +758,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "#FFF5EE",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 20,
     width: "80%",
@@ -607,9 +766,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "left",
+    fontWeight: "500",
+    textAlign: "center",
   },
   textArea: {
     width: "100%",
@@ -621,6 +779,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     backgroundColor: "#FFFFFF",
     marginBottom: 16,
+    marginTop: 16,
   },
   modalButtons: {
     flexDirection: "row",
@@ -677,7 +836,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 150,
     borderRadius: 8,
-    marginBottom: 8,
   },
   imagePlaceholder: {
     width: "100%",
@@ -686,7 +844,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#E0E0E0",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
   },
   actions: {
     flexDirection: "row",
@@ -727,5 +884,52 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     backgroundColor: "#f0f0f0",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#e0e0e0",
+    marginVertical: 8,
+  },
+  deliveredButton: {
+    backgroundColor: "#0B9A39",
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    marginTop: 12,
+    marginBottom: 12,
+    fontWeight: "bold",
+  },
+  starsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  star: {
+    fontSize: 40,
+    color: "#D3D3D3",
+    marginHorizontal: 5,
+  },
+  starSelected: {
+    color: "#4169E1",
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalContainerGreen: {
+    width: "100%",
+    backgroundColor: "#d1efeb",
+    borderColor: "#0b9a39",
+    borderWidth: 1,
+  },
+  modalContainerRed: {
+    width: "100%",
+    backgroundColor: "#fbe5d8",
+    borderColor: "#e9833a",
+    borderWidth: 1,
   },
 });

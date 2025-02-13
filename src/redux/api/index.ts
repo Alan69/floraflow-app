@@ -39,39 +39,44 @@ const baseApi = createApi({
       const refreshToken = (api.getState() as RootState).auth.refreshToken;
 
       if (refreshToken) {
-        const refreshResult = await fetchBaseQuery({
-          baseUrl: baseURL,
-        })(
-          {
-            url: "/token/refresh/",
-            method: "POST",
-            body: { refresh: refreshToken },
-          },
-          api,
-          extraOptions
-        );
-
-        if (refreshResult.data) {
-          const newTokens = refreshResult.data as TTokenResponse;
-          api.dispatch(
-            authActions.setToken({
-              token: newTokens.access,
-              refreshToken: newTokens.refresh,
-            })
+        try {
+          const refreshResult = await fetchBaseQuery({
+            baseUrl: baseURL,
+          })(
+            {
+              url: "/token/refresh/",
+              method: "POST",
+              body: { refresh: refreshToken },
+            },
+            api,
+            extraOptions
           );
 
-          result = await fetchBaseQuery({
-            baseUrl: baseURL,
-            prepareHeaders: (headers) => {
-              headers.set("Authorization", `Bearer ${newTokens.access}`);
-              return headers;
-            },
-          })(args, api, extraOptions);
-        } else {
-          api.dispatch(authActions.logOut());
+          if (refreshResult.data) {
+            const newTokens = refreshResult.data as TTokenResponse;
+
+            api.dispatch(
+              authActions.setToken({
+                token: newTokens.access,
+                refreshToken: newTokens.refresh,
+              })
+            );
+
+            result = await fetchBaseQuery({
+              baseUrl: baseURL,
+              prepareHeaders: (headers) => {
+                headers.set("Authorization", `Bearer ${newTokens.access}`);
+                return headers;
+              },
+            })(args, api, extraOptions);
+          } else {
+            api.dispatch(authActions.logout());
+          }
+        } catch (error) {
+          api.dispatch(authActions.logout());
         }
       } else {
-        api.dispatch(authActions.logOut());
+        api.dispatch(authActions.logout());
       }
     }
 

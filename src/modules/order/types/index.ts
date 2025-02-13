@@ -52,10 +52,15 @@ export type TOrderHistory = {
   reason: string;
   created_at: string;
   updated_at: string;
-  rating: number;
-  instagram_link: string | null;
-  whatsapp_number: string | null;
   twogis: string | null;
+  store_average_rating: number;
+  store_twogis: string | null;
+  store_comment: string;
+  store_instagram_link: string;
+  store_logo: string;
+  store_name: string;
+  store_phone_number: string;
+  store_whatsapp_number: string;
 };
 
 export type TOrderProposedPricesStorage = {
@@ -134,6 +139,11 @@ export type TAcceptOrderProposedPricesStorageRequest = {
 export type TChangeOrderStatusRequest = {
   order_id: string;
   status: OrderStatusEnum;
+};
+
+export type TRateOrderRequest = {
+  uuid: string;
+  rating: number;
 };
 
 export type TChangeOrderStatusResponse = {
@@ -224,6 +234,7 @@ export type TCurrentOrderStore = {
   whatsapp_number: string | null;
   proposed_price: string | null;
   comment: string | null;
+  rating: number | null;
 };
 
 export type TCurrentOrderResponse = {

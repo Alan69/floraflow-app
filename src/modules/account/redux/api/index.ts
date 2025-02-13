@@ -8,7 +8,6 @@ export type TUpdateMeRequest = {
   first_name: string;
   last_name: string;
   phone: string;
-  // user_type: UserTypeEnum;
   city: CityEnum;
   profile_picture?: File | string;
 };
@@ -71,7 +70,6 @@ export const accountApi = baseApi.injectEndpoints({
         first_name,
         last_name,
         phone,
-        // user_type,
         city,
         profile_picture,
       }) => {
@@ -80,7 +78,6 @@ export const accountApi = baseApi.injectEndpoints({
         formData.append("first_name", first_name);
         formData.append("last_name", last_name);
         formData.append("phone", phone);
-        // formData.append("user_type", user_type);
         formData.append("city", city);
 
         if (profile_picture && typeof profile_picture !== "string") {

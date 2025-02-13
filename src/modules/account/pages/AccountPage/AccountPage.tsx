@@ -41,27 +41,30 @@ export const AccountPage = () => {
   const [updateStoreProfile, { isLoading: isUpdatingStore }] =
     useUpdateStoreProfileMutation();
 
+  const [isDataInitialized, setIsDataInitialized] = useState(false);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm({
     defaultValues: {
-      email: user?.email || "",
-      firstName: user?.first_name || "",
-      lastName: user?.last_name || "",
-      phone: user?.phone || "",
-      city: user?.city || "",
-      profilePicture: user?.profile_picture || "",
-      userType: user?.user_type === UserTypeEnum.STORE,
-      storeName: storeProfile?.store_name || "",
-      storeLogo: storeProfile?.logo || "",
-      storeAddress: storeProfile?.address || "",
-      storeInstagram: storeProfile?.instagram_link || "",
-      storeTwogis: storeProfile?.twogis || "",
-      storeWhatsApp: storeProfile?.whatsapp_number || "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      city: "",
+      profilePicture: "",
+      userType: false,
+      storeName: "",
+      storeLogo: "",
+      storeAddress: "",
+      storeInstagram: "",
+      storeTwogis: "",
+      storeWhatsApp: "",
     },
   });
 
@@ -71,6 +74,8 @@ export const AccountPage = () => {
   const [selectedStoreLogo, setSelectedStoreLogo] = useState<FormData | null>(
     null
   );
+
+  const { isUpdatingUserType } = useTypedSelector((state) => state.account);
 
   const handleSubmitForm = async (data: any) => {
     try {
@@ -254,24 +259,43 @@ export const AccountPage = () => {
   };
 
   useEffect(() => {
-    if (!user) {
-      getMe();
+    if (user && !isDataInitialized) {
+      reset({
+        email: user.email || "",
+        firstName: user.first_name || "",
+        lastName: user.last_name || "",
+        phone: user.phone || "",
+        city: user.city || "",
+        // @ts-ignore
+        profilePicture: user?.profile_picture || "",
+        userType: user.user_type === UserTypeEnum.STORE,
+        storeName: storeProfile?.store_name || "",
+        storeLogo: storeProfile?.logo || "",
+        storeAddress: storeProfile?.address || "",
+        storeInstagram: storeProfile?.instagram_link || "",
+        storeTwogis: storeProfile?.twogis || "",
+        storeWhatsApp: storeProfile?.whatsapp_number || "",
+      });
+      setIsDataInitialized(true);
     }
+  }, [user, storeProfile, reset]);
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const userData = await getMe().unwrap();
+        if (userData?.user_type === UserTypeEnum.STORE) {
+          await getStoreProfile().unwrap();
+        }
+      } catch (error) {
+        console.error("Error loading initial data:", error);
+      }
+    };
+
+    loadInitialData();
   }, []);
 
-  useEffect(() => {
-    if (user?.user_type === UserTypeEnum.STORE && !storeProfile) {
-      getStoreProfile();
-    }
-  }, [user?.user_type]);
-
-  useEffect(() => {
-    if (storeProfile) {
-      updateStoreFormFields(storeProfile);
-    }
-  }, [storeProfile, setValue]);
-
-  if (isAccountLoading) {
+  if (isAccountLoading || isUpdatingUserType || !isDataInitialized) {
     return (
       <View style={styles.spinnerContainer}>
         <ActivityIndicator size="large" color="#0b9a39" />

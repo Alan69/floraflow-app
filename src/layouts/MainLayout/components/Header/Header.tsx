@@ -22,7 +22,7 @@ export const Header = () => {
   const dispatch = useDispatch();
 
   const logOut = () => {
-    dispatch(authActions.logOut());
+    dispatch(authActions.logout());
   };
 
   return (

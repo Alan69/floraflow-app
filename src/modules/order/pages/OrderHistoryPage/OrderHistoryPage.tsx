@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   Linking,
+  Image,
 } from "react-native";
 import { useLazyGetOrderHistoryListQuery } from "modules/order/redux/api";
 import {
@@ -18,13 +19,12 @@ import {
   ActivityIndicator,
   Button,
   IconButton,
+  Divider,
 } from "react-native-paper";
 
 export const OrderHistoryPage = () => {
   const [trigger, { data, isLoading, isError }] =
     useLazyGetOrderHistoryListQuery();
-
-  console.log("data", data);
 
   useEffect(() => {
     trigger();
@@ -105,36 +105,67 @@ export const OrderHistoryPage = () => {
               Причина отказа: {item.reason || "-"}
             </Text>
           )}
-          <View style={styles.iconsContainer}>
-            {item.instagram_link && (
-              <IconButton
-                icon="instagram"
-                size={36}
-                onPress={() => handleInstagramPress(item.instagram_link || "")}
-              />
-            )}
-            {item.whatsapp_number && (
-              <IconButton
-                icon="phone"
-                size={36}
-                onPress={() => handlePhonePress(item.whatsapp_number || "")}
-              />
-            )}
-            {item.whatsapp_number && (
-              <IconButton
-                icon="whatsapp"
-                size={36}
-                onPress={() => handleWhatsAppPress(item.whatsapp_number || "")}
-              />
-            )}
-            {item.twogis && (
-              <IconButton
-                icon="map-marker"
-                size={36}
-                onPress={() => handle2GisPress(item.twogis || "")}
-              />
-            )}
-          </View>
+
+          <Divider style={styles.divider} />
+
+          <>
+            <View style={styles.cardHeader}>
+              <View style={styles.storeInfo}>
+                {item.store_logo && (
+                  <Image
+                    source={{ uri: item.store_logo }}
+                    style={styles.storeLogo}
+                  />
+                )}
+                <Text style={styles.storeName}>Магазин: {item.store_name}</Text>
+              </View>
+              <Text style={styles.rating}>⭐ {item.store_average_rating}</Text>
+            </View>
+            <Text variant="bodyMedium">
+              Цена с доставкой:{" "}
+              <Text style={styles.priceText}>{item.price} тг</Text>
+            </Text>
+            <Text variant="bodyMedium">Комментарий: {item.store_comment}</Text>
+
+            <Divider style={styles.divider} />
+
+            <View style={styles.iconsContainer}>
+              {item.store_instagram_link && (
+                <IconButton
+                  icon="instagram"
+                  size={36}
+                  onPress={() =>
+                    handleInstagramPress(item.store_instagram_link || "")
+                  }
+                />
+              )}
+              {item.store_phone_number && (
+                <IconButton
+                  icon="phone"
+                  size={36}
+                  onPress={() =>
+                    handlePhonePress(item.store_phone_number || "")
+                  }
+                />
+              )}
+              {item.store_whatsapp_number && (
+                <IconButton
+                  icon="whatsapp"
+                  size={36}
+                  onPress={() =>
+                    handleWhatsAppPress(item.store_whatsapp_number || "")
+                  }
+                />
+              )}
+              {item.store_twogis && (
+                <IconButton
+                  icon="map-marker"
+                  size={36}
+                  onPress={() => handle2GisPress(item.store_twogis || "")}
+                />
+              )}
+            </View>
+          </>
         </Card.Content>
       </Card>
     );
@@ -222,7 +253,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   sectionHeader: {
-    marginTop: 8,
     marginBottom: 4,
     fontWeight: "bold",
   },
@@ -256,5 +286,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#e0e0e0",
+    marginVertical: 8,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  storeInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  storeLogo: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 8,
+  },
+  storeName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  rating: {
+    fontSize: 14,
+    color: "#FFA500",
   },
 });

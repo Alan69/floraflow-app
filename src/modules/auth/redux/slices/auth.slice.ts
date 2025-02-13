@@ -22,34 +22,24 @@ const authSlice = createSlice({
   reducers: {
     setToken: (
       state,
-      {
-        payload: { refreshToken, token },
-      }: PayloadAction<{ token: string | null; refreshToken: string | null }>
+      action: PayloadAction<{ token: string; refreshToken: string }>
     ) => {
-      state.token = token;
-      state.refreshToken = refreshToken;
-
-      if (token) {
-        AsyncStorage.setItem("token", token);
-      }
-      if (refreshToken) {
-        AsyncStorage.setItem("refreshToken", refreshToken);
-      }
+      state.token = action.payload.token;
+      state.refreshToken = action.payload.refreshToken;
+      AsyncStorage.setItem("token", action.payload.token);
+      AsyncStorage.setItem("refreshToken", action.payload.refreshToken);
     },
-    setUser: (state, { payload }: PayloadAction<TUserData | null>) => {
-      state.user = payload;
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
-    setStoreProfile: (
-      state,
-      { payload }: PayloadAction<TStoreProfileData | null>
-    ) => {
-      state.storeProfile = payload;
+    setStoreProfile: (state, action) => {
+      state.storeProfile = action.payload;
     },
-    logOut: (state) => {
+    logout: (state) => {
       state.token = null;
       state.refreshToken = null;
       state.user = null;
-
+      state.storeProfile = null;
       AsyncStorage.removeItem("token");
       AsyncStorage.removeItem("refreshToken");
     },

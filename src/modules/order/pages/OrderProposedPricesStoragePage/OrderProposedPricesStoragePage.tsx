@@ -150,93 +150,103 @@ export const OrderProposedPricesStoragePage = () => {
           onDismiss={() => setModalVisible(false)}
           contentContainerStyle={styles.modalContent}
         >
-          <Title style={styles.modalTitle}>
-            Заказ - {selectedOrder?.first_name}
-          </Title>
-          <Paragraph>
-            Цветы: {selectedOrder?.flower.text}, {selectedOrder?.color.text},
-            {selectedOrder?.flower_height} см, {selectedOrder?.quantity} шт
-          </Paragraph>
-          <Paragraph>Адрес: {selectedOrder?.recipients_address}</Paragraph>
+          <View style={styles.modalHeader}>
+            <Title style={styles.modalTitle}>
+              Заказ - {selectedOrder?.first_name}
+            </Title>
+          </View>
 
-          <Button
-            mode="contained"
-            onPress={pickImage}
-            style={styles.imageButton}
-            buttonColor="#0b9a39"
-          >
-            {selectedImage ? "Изменить фото" : "Добавить фото"}
-          </Button>
+          <ScrollView style={styles.modalBody}>
+            <Paragraph>
+              Цветы: {selectedOrder?.flower.text}, {selectedOrder?.color.text},
+              {selectedOrder?.flower_height} см, {selectedOrder?.quantity} шт
+            </Paragraph>
+            <Paragraph>Адрес: {selectedOrder?.recipients_address}</Paragraph>
 
-          {selectedImage && (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: selectedImage }} style={styles.image} />
-              <Button
-                mode="contained"
-                onPress={() => setSelectedImage("")}
-                style={styles.removeImageButton}
-              >
-                ✕
-              </Button>
-            </View>
-          )}
-
-          <Controller
-            control={control}
-            name="price"
-            rules={{ required: "Обязательное поле" }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <>
-                <TextInput
-                  mode="outlined"
-                  label="Цена с доставкой"
-                  value={value}
-                  onChangeText={onChange}
-                  keyboardType="numeric"
-                  error={!!error}
-                />
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
-              </>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="comment"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                mode="outlined"
-                label="Комментарий"
-                value={value}
-                onChangeText={onChange}
-                multiline
-                numberOfLines={6}
-                style={styles.commentInput}
-                textAlignVertical="top"
-              />
-            )}
-          />
-
-          <View style={styles.modalButtons}>
             <Button
               mode="contained"
-              onPress={handleSubmit(onSubmit)}
-              style={styles.submitButton}
+              onPress={pickImage}
+              style={styles.imageButton}
               buttonColor="#0b9a39"
             >
-              Предложить
+              {selectedImage ? "Изменить фото" : "Добавить фото"}
             </Button>
-            <Button
-              mode="contained"
-              onPress={() => {
-                reset();
-                setModalVisible(false);
-              }}
-              style={styles.cancelButton}
-            >
-              Отмена
-            </Button>
-          </View>
+
+            {selectedImage && (
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: selectedImage }} style={styles.image} />
+                <Button
+                  mode="contained"
+                  onPress={() => setSelectedImage("")}
+                  style={styles.removeImageButton}
+                >
+                  ✕
+                </Button>
+              </View>
+            )}
+
+            <Controller
+              control={control}
+              name="price"
+              rules={{ required: "Обязательное поле" }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <TextInput
+                    mode="outlined"
+                    label="Цена с доставкой"
+                    value={value}
+                    onChangeText={onChange}
+                    keyboardType="numeric"
+                    error={!!error}
+                  />
+                  {error && (
+                    <Text style={styles.errorText}>{error.message}</Text>
+                  )}
+                </>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="comment"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  mode="outlined"
+                  label="Комментарий"
+                  value={value}
+                  onChangeText={onChange}
+                  multiline
+                  numberOfLines={6}
+                  style={styles.commentInput}
+                  textAlignVertical="top"
+                />
+              )}
+            />
+
+            <View style={styles.modalButtons}>
+              <Button
+                mode="contained"
+                onPress={handleSubmit(onSubmit)}
+                style={styles.submitButton}
+                buttonColor="#0b9a39"
+              >
+                Предложить
+              </Button>
+              <Button
+                mode="contained"
+                onPress={() => {
+                  reset();
+                  setModalVisible(false);
+                }}
+                style={styles.cancelButton}
+              >
+                Отмена
+              </Button>
+            </View>
+          </ScrollView>
         </Modal>
       </Portal>
     </ScrollView>
@@ -298,9 +308,25 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 20,
     margin: 20,
     borderRadius: 8,
+    maxHeight: "80%",
+  },
+  modalHeader: {
+    backgroundColor: "#FFF9C4",
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#FFE082",
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+    padding: 16,
+  },
+  modalBody: {
+    padding: 16,
   },
   imageContainer: {
     position: "relative",
@@ -341,20 +367,6 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
     backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    backgroundColor: "#FFF9C4",
-    padding: 16,
-    marginHorizontal: -20,
-    marginTop: -20,
-    marginBottom: 20,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#FFE082",
   },
   commentInput: {
     minHeight: 120,

@@ -29,10 +29,18 @@ const AppRoutes: React.FC = () => {
   );
 
   useEffect(() => {
-    if (token && !user) {
-      getMe();
-    }
-  }, [token, getMe, currentRoute]);
+    const initializeUser = async () => {
+      if (token && !user) {
+        try {
+          await getMe().unwrap();
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    initializeUser();
+  }, [token, user, getMe]);
 
   useEffect(() => {
     if (!token) {
@@ -44,7 +52,15 @@ const AppRoutes: React.FC = () => {
     <>
       {token ? (
         <MainLayout>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Account"
+          >
+            <Stack.Screen
+              name="Account"
+              options={{ headerShown: false }}
+              component={AccountPage}
+            />
             <Stack.Screen
               name="OrderCreate"
               options={{ headerShown: false }}
@@ -68,11 +84,6 @@ const AppRoutes: React.FC = () => {
               name="OrderStorageHistory"
               options={{ headerShown: false }}
               component={OrderStorageHistoryPage}
-            />
-            <Stack.Screen
-              name="Account"
-              options={{ headerShown: false }}
-              component={AccountPage}
             />
           </Stack.Navigator>
         </MainLayout>

@@ -16,6 +16,7 @@ import {
   TOrderHistory,
   TOrderStorageHistory,
   TOrderProposedPricesStorage,
+  TRateOrderRequest,
 } from "modules/order/types";
 
 export const orderApi = baseApi.injectEndpoints({
@@ -157,6 +158,31 @@ export const orderApi = baseApi.injectEndpoints({
       transformResponse: (response: TChangeOrderStatusResponse) => response,
       extraOptions: { showErrors: false },
     }),
+    changeOrderStatusClient: build.mutation<
+      TChangeOrderStatusResponse,
+      TChangeOrderStatusRequest
+    >({
+      query: ({ order_id, status }) => ({
+        url: `/client/order-status/${order_id}/`,
+        method: "PATCH",
+        body: {
+          status,
+        },
+      }),
+      transformResponse: (response: TChangeOrderStatusResponse) => response,
+      extraOptions: { showErrors: false },
+    }),
+    rateOrder: build.mutation<TRateOrderRequest, TRateOrderRequest>({
+      query: ({ uuid, rating }) => ({
+        url: `/client/order/${uuid}/rate/`,
+        method: "PATCH",
+        body: {
+          rating,
+        },
+      }),
+      transformResponse: (response: TRateOrderRequest) => response,
+      extraOptions: { showErrors: false },
+    }),
   }),
   overrideExisting: false,
 });
@@ -174,4 +200,6 @@ export const {
   useAcceptOrderMutation,
   useCancelOrderMutation,
   useChangeOrderStatusMutation,
+  useChangeOrderStatusClientMutation,
+  useRateOrderMutation,
 } = orderApi;

@@ -12,11 +12,13 @@ export const NavigationMenu = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { t } = useTranslation();
   const { user } = useTypedSelector((state) => state.auth);
+  const { isUpdatingUserType } = useTypedSelector((state) => state.account);
 
   return (
     <View style={styles.menuContainer}>
       <TouchableOpacity
-        style={styles.menuItem}
+        style={[styles.menuItem, isUpdatingUserType && styles.disabled]}
+        disabled={isUpdatingUserType}
         onPress={() =>
           navigation.navigate(
             user?.user_type === UserTypeEnum.CLIENT
@@ -36,13 +38,13 @@ export const NavigationMenu = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.menuItem}
+        style={[styles.menuItem, isUpdatingUserType && styles.disabled]}
+        disabled={isUpdatingUserType}
         onPress={() =>
           navigation.navigate(
             user?.user_type === UserTypeEnum.CLIENT
               ? "OrderHistory"
-              : // : "OrderHistory"
-                "OrderStorageHistory"
+              : "OrderStorageHistory"
           )
         }
       >
@@ -51,7 +53,8 @@ export const NavigationMenu = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.menuItem}
+        style={[styles.menuItem, isUpdatingUserType && styles.disabled]}
+        disabled={isUpdatingUserType}
         onPress={() => navigation.navigate("Account")}
       >
         <Icon name="person" size={24} color="#0b9a39" />
@@ -78,5 +81,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
     marginTop: 5,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
