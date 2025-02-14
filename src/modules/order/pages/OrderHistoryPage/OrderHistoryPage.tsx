@@ -139,12 +139,12 @@ export const OrderHistoryPage = () => {
                   }
                 />
               )}
-              {item.store_phone_number && (
+              {item.store_whatsapp_number && (
                 <IconButton
                   icon="phone"
                   size={36}
                   onPress={() =>
-                    handlePhonePress(item.store_phone_number || "")
+                    handlePhonePress(item.store_whatsapp_number || "")
                   }
                 />
               )}

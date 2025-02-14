@@ -3,6 +3,7 @@ import { TTokenResponse } from "modules/auth/redux/api";
 import { authActions } from "modules/auth/redux/slices/auth.slice";
 import { RootState } from "redux/rootReducer";
 import { baseURL } from "types/baseUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const baseApi = createApi({
   reducerPath: "api",
@@ -18,7 +19,25 @@ const baseApi = createApi({
       return headers;
     },
   }),
-  endpoints: (builder) => ({}),
+  endpoints: (builder) => ({
+    clearStore: builder.mutation<{ success: boolean }, void>({
+      queryFn: async () => {
+        try {
+          await AsyncStorage.clear();
+          return {
+            data: { success: true },
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: "Failed to clear storage",
+            },
+          };
+        }
+      },
+    }),
+  }),
   // @ts-ignore
   async baseQuery(args, api, extraOptions) {
     let result = await fetchBaseQuery({
@@ -83,5 +102,7 @@ const baseApi = createApi({
     return result;
   },
 });
+
+export const { useClearStoreMutation } = baseApi;
 
 export default baseApi;

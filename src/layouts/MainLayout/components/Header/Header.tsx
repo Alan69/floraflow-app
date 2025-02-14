@@ -13,17 +13,28 @@ import { authActions } from "modules/auth/redux/slices/auth.slice";
 import { LanguageSelector } from "components/LanguageSelector/LanguageSelector";
 import Toast from "react-native-toast-message";
 import logo from "assets/images/logo.png";
+import { useClearStoreMutation } from "redux/api";
 
 export const Header = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [clearStore] = useClearStoreMutation();
 
-  const logOut = () => {
-    dispatch(authActions.logout());
-    Toast.show({
-      type: "success",
-      text1: t("headerMain.logoutSuccess"),
-    });
+  const logOut = async () => {
+    try {
+      await clearStore().unwrap();
+      dispatch(authActions.logout());
+      Toast.show({
+        type: "success",
+        text1: t("headerMain.logoutSuccess"),
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      Toast.show({
+        type: "error",
+        text1: t("headerMain.logoutError"),
+      });
+    }
   };
 
   return (

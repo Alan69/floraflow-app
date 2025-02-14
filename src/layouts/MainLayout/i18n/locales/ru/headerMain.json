@@ -2,5 +2,6 @@
   "logout": "Выйти",
   "language_english": "Английский",
   "language_russian": "Русский",
-  "logoutSuccess": "Вы успешно вышли из системы"
+  "logoutSuccess": "Вы успешно вышли из системы",
+  "logoutError": "Ошибка при выходе из системы"
 }

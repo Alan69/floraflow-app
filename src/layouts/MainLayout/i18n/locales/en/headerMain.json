@@ -2,5 +2,6 @@
   "logout": "Logout",
   "language_english": "English",
   "language_russian": "Russian",
-  "logoutSuccess": "You have successfully logged out"
+  "logoutSuccess": "You have successfully logged out",
+  "logoutError": "Error logging out"
 }
