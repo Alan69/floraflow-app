@@ -83,6 +83,13 @@ export const OrderCreatePage = () => {
     }
   };
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      // @ts-ignore
+      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+    }, 100);
+  }, []);
+
   if (isFlowersLoading || isColorsLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -104,10 +111,7 @@ export const OrderCreatePage = () => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scrollViewContent}
           nestedScrollEnabled={true}
-          onContentSizeChange={() => {
-            // @ts-ignore
-            scrollViewRef.current?.scrollToEnd({ animated: true });
-          }}
+          showsVerticalScrollIndicator={true}
         >
           <Text style={styles.title}>Заказ: город Астана</Text>
 
@@ -399,5 +403,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingBottom: 20,
   },
 });

@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     margin: 20,
     borderRadius: 8,
-    maxHeight: "80%",
   },
   modalHeader: {
     backgroundColor: "#FFF9C4",
@@ -340,7 +339,6 @@ const styles = StyleSheet.create({
   modalButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 16,
   },
   submitButton: {
     flex: 1,
